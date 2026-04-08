@@ -1,0 +1,137 @@
+<div class="page-wrapper">
+  <!-- Header -->
+  <div class="spacex-header">
+    <h1>🔍 Filter Missions by Launch Year</h1>
+    <p>Select a year to view SpaceX launches</p>
+    <button mat-raised-button color="warn" (click)="goHome()">
+      <mat-icon>arrow_back</mat-icon> Back to All Missions
+    </button>
+  </div>
+
+  <!-- Year Filter Section — ReactiveFormsModule + @for -->
+  <div class="filter-section">
+    <mat-card class="filter-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>calendar_month</mat-icon> Select Launch Year
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Reactive Form Select (Dropdown) -->
+        <mat-form-field appearance="outline" class="year-select">
+          <mat-label>Launch Year</mat-label>
+          <mat-select [formControl]="yearControl">
+            @for (year of launchYears; track year) {
+              <mat-option [value]="year">{{ year }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Quick Year Buttons — @for -->
+        <div class="year-buttons">
+          @for (year of launchYears; track year) {
+            <button
+              mat-raised-button
+              [color]="selectedYear() === year ? 'primary' : ''"
+              [class.selected-year]="selectedYear() === year"
+              (click)="selectYear(year)"
+              class="year-btn">
+              {{ year }}
+            </button>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Loading Spinner — @if -->
+  @if (isLoading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p>Loading missions for {{ selectedYear() }}...</p>
+    </div>
+  }
+
+  <!-- Error Message — @if -->
+  @if (errorMessage()) {
+    <div class="error-container">
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ errorMessage() }}</p>
+    </div>
+  }
+
+  <!-- Filtered Results — @if + @for -->
+  @if (!isLoading() && missions().length > 0) {
+    <div class="results-section">
+      <h2 class="results-title">
+        <mat-icon>rocket_launch</mat-icon>
+        Missions in {{ selectedYear() }}
+        <span class="count-badge">{{ missions().length }}</span>
+      </h2>
+
+      <div class="missions-grid">
+        @for (mission of missions(); track mission.flight_number) {
+          <mat-card class="mission-card" (click)="viewDetails(mission)">
+
+            <div class="patch-container">
+              @if (mission.links?.mission_patch_small) {
+                <img
+                  [src]="mission.links.mission_patch_small"
+                  [alt]="mission.mission_name"
+                  class="patch-img"
+                />
+              } @else {
+                <mat-icon class="default-patch-icon">rocket_launch</mat-icon>
+              }
+            </div>
+
+            <mat-card-header>
+              <mat-card-title>{{ mission.mission_name }} #{{ mission.flight_number }}</mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+              <div class="info-row">
+                <span class="label">Mission Ids</span>
+                <span class="value">{{ mission.mission_id?.join(', ') || '-' }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Launch Year</span>
+                <span class="value">{{ mission.launch_year }}</span>
+              </div>
+              <!-- @switch for launch status -->
+              <div class="info-row">
+                <span class="label">Successful Launch</span>
+                @switch (mission.launch_success) {
+                  @case (true) {
+                    <span class="value success">Yes ✓</span>
+                  }
+                  @case (false) {
+                    <span class="value failed">No ✗</span>
+                  }
+                  @default {
+                    <span class="value">No Data</span>
+                  }
+                }
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <button mat-button color="primary" (click)="viewDetails(mission); $event.stopPropagation()">
+                <mat-icon>info</mat-icon> Details
+              </button>
+            </mat-card-actions>
+
+          </mat-card>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- No Results — @if -->
+  @if (!isLoading() && selectedYear() && missions().length === 0 && !errorMessage()) {
+    <div class="no-results">
+      <mat-icon>search_off</mat-icon>
+      <p>No missions found for {{ selectedYear() }}</p>
+    </div>
+  }
+</div>

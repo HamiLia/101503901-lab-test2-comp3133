@@ -1,0 +1,184 @@
+.page-wrapper {
+  min-height: 100vh;
+  background: #f0f2f5;
+}
+
+.spacex-header {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.spacex-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px;
+  gap: 20px;
+}
+
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  gap: 10px;
+  color: #f44336;
+}
+
+.details-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 0 20px 40px;
+}
+
+.details-card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.main-info {
+  display: flex;
+  gap: 30px;
+  padding: 24px;
+  background: #fff8f0;
+  align-items: flex-start;
+}
+
+.patch-section {
+  flex-shrink: 0;
+}
+
+.patch-image {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.default-patch {
+  font-size: 100px;
+  width: 100px;
+  height: 100px;
+  color: #ccc;
+}
+
+.info-section {
+  flex: 1;
+}
+
+.mission-title {
+  color: #e64a19;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.section {
+  padding: 20px 24px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e64a19;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.info-item mat-icon {
+  color: #3f51b5;
+  flex-shrink: 0;
+}
+
+.info-item div {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-size: 0.95rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.success-text {
+  color: #4caf50;
+  font-weight: 700;
+}
+
+.failed-text {
+  color: #f44336;
+  font-weight: 700;
+}
+
+.details-text {
+  color: #555;
+  line-height: 1.8;
+  font-size: 0.95rem;
+}
+
+.links-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.links-row a {
+  background: #f0f2f5;
+  border-radius: 50%;
+}
+
+.no-links {
+  color: #888;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .main-info {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.muted {
+  color: #aaa;
+  font-style: italic;
+}

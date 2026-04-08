@@ -1,0 +1,114 @@
+<div class="page-wrapper">
+  <!-- Header -->
+  <div class="spacex-header">
+    <h1>🚀 SpaceX Mission Launch List</h1>
+    <p>Explore all SpaceX launches</p>
+    <button mat-raised-button color="accent" (click)="goToFilter()" class="filter-btn">
+      <mat-icon>filter_list</mat-icon> Filter by Year
+    </button>
+  </div>
+
+  <!-- Loading Spinner — @if -->
+  @if (isLoading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p>Loading missions...</p>
+    </div>
+  }
+
+  <!-- Error Message — @if -->
+  @if (errorMessage()) {
+    <div class="error-container">
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ errorMessage() }}</p>
+    </div>
+  }
+
+  <!-- Mission List — @for -->
+  @if (!isLoading() && !errorMessage()) {
+    <div class="missions-container">
+      @for (mission of missions(); track mission.flight_number) {
+        <mat-card class="mission-card" (click)="viewDetails(mission)" matRipple>
+
+          <mat-card-header>
+            <div mat-card-avatar class="mission-avatar">
+              @if (mission.links?.mission_patch_small) {
+                <img
+                  [src]="mission.links.mission_patch_small"
+                  [alt]="mission.mission_name"
+                  class="patch-img"
+                />
+              } @else {
+                <mat-icon class="default-icon">rocket_launch</mat-icon>
+              }
+            </div>
+
+            <mat-card-title>
+              {{ mission.mission_name }}
+              <!-- @switch for launch status badge -->
+              <span class="status-badge">
+                @switch (mission.launch_success) {
+                  @case (true) {
+                    <mat-chip class="chip-success">✓ Success</mat-chip>
+                  }
+                  @case (false) {
+                    <mat-chip class="chip-failed">✗ Failed</mat-chip>
+                  }
+                  @default {
+                    <mat-chip class="chip-unknown">? Unknown</mat-chip>
+                  }
+                }
+              </span>
+            </mat-card-title>
+
+            <mat-card-subtitle>
+              <mat-icon class="inline-icon">calendar_today</mat-icon>
+              {{ mission.launch_year }} &nbsp;|&nbsp;
+              <mat-icon class="inline-icon">flight_takeoff</mat-icon>
+              Flight #{{ mission.flight_number }}
+            </mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="details-text">{{ mission.details || 'No details available.' }}</p>
+            <div class="rocket-info">
+              <mat-icon class="inline-icon">rocket</mat-icon>
+              <strong>{{ mission.rocket?.rocket_name }}</strong>
+              &nbsp;({{ mission.rocket?.rocket_type }})
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button mat-button color="primary" (click)="viewDetails(mission); $event.stopPropagation()">
+              <mat-icon>info</mat-icon> View Details
+            </button>
+            @if (mission.links?.article_link) {
+              <a [href]="mission.links.article_link" target="_blank" mat-button color="accent"
+                 (click)="$event.stopPropagation()">
+                <mat-icon>article</mat-icon> Article
+              </a>
+            }
+            @if (mission.links?.video_link) {
+              <a [href]="mission.links.video_link" target="_blank" mat-button
+                 (click)="$event.stopPropagation()">
+                <mat-icon>videocam</mat-icon> Video
+              </a>
+            }
+            @if (mission.links?.wikipedia) {
+              <a [href]="mission.links.wikipedia" target="_blank" mat-button
+                 (click)="$event.stopPropagation()">
+                <mat-icon>language</mat-icon> Wikipedia
+              </a>
+            }
+          </mat-card-actions>
+
+        </mat-card>
+      } @empty {
+        <div class="no-results">
+          <mat-icon>search_off</mat-icon>
+          <p>No missions found.</p>
+        </div>
+      }
+    </div>
+  }
+</div>

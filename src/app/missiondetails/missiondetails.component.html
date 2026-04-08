@@ -1,0 +1,177 @@
+<div class="page-wrapper">
+  <!-- Header -->
+  <div class="spacex-header">
+    <h1>🚀 SpaceX Mission Details</h1>
+    <button mat-raised-button color="warn" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon> Back to Missions
+    </button>
+  </div>
+
+  <!-- Loading Spinner — @if -->
+  @if (isLoading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p>Loading mission details...</p>
+    </div>
+  }
+
+  <!-- Error Message — @if -->
+  @if (errorMessage()) {
+    <div class="error-container">
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ errorMessage() }}</p>
+    </div>
+  }
+
+  <!-- Mission Details — @if -->
+  @if (!isLoading() && mission()) {
+    <div class="details-container">
+      <mat-card class="details-card">
+
+        <!-- Main Info Section -->
+        <div class="main-info">
+          <!-- Mission Patch -->
+          <div class="patch-section">
+            @if (mission()!.links?.mission_patch_small) {
+              <img
+                [src]="mission()!.links.mission_patch_small"
+                [alt]="mission()!.mission_name"
+                class="patch-image"
+              />
+            } @else {
+              <mat-icon class="default-patch">rocket_launch</mat-icon>
+            }
+          </div>
+
+          <!-- Mission Info -->
+          <div class="info-section">
+            <h2 class="mission-title">Mission - {{ mission()!.mission_name }}</h2>
+
+            <div class="info-grid">
+              <div class="info-item">
+                <mat-icon>tag</mat-icon>
+                <div>
+                  <span class="info-label">Name</span>
+                  <span class="info-value">{{ mission()!.mission_name }}</span>
+                </div>
+              </div>
+              <div class="info-item">
+                <mat-icon>calendar_today</mat-icon>
+                <div>
+                  <span class="info-label">Launch Year</span>
+                  <span class="info-value">{{ mission()!.launch_year }}</span>
+                </div>
+              </div>
+              <div class="info-item">
+                <mat-icon>flight_takeoff</mat-icon>
+                <div>
+                  <span class="info-label">Flight Number</span>
+                  <span class="info-value">#{{ mission()!.flight_number }}</span>
+                </div>
+              </div>
+
+              <!-- @switch for launch success status -->
+              <div class="info-item">
+                <mat-icon>check_circle</mat-icon>
+                <div>
+                  <span class="info-label">Launch Success</span>
+                  @switch (mission()!.launch_success) {
+                    @case (true) {
+                      <span class="info-value success-text">Yes ✓</span>
+                    }
+                    @case (false) {
+                      <span class="info-value failed-text">No ✗</span>
+                    }
+                    @default {
+                      <span class="info-value">Unknown</span>
+                    }
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Rocket Section -->
+        <div class="section">
+          <h3 class="section-title"><mat-icon>rocket</mat-icon> Rocket</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <mat-icon>label</mat-icon>
+              <div>
+                <span class="info-label">Name</span>
+                <span class="info-value">{{ mission()!.rocket?.rocket_name }}</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <mat-icon>category</mat-icon>
+              <div>
+                <span class="info-label">Type</span>
+                <span class="info-value">{{ mission()!.rocket?.rocket_type }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Launch Site Section -->
+        <div class="section">
+          <h3 class="section-title"><mat-icon>location_on</mat-icon> Launch Site</h3>
+          <div class="info-item">
+            <mat-icon>place</mat-icon>
+            <div>
+              <span class="info-label">Name</span>
+              <span class="info-value">{{ mission()!.launch_site?.site_name_long || mission()!.launch_site?.site_name || 'N/A' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Launch Details Section -->
+        <div class="section">
+          <h3 class="section-title"><mat-icon>description</mat-icon> Launch Details</h3>
+          @if (mission()!.details) {
+            <p class="details-text">{{ mission()!.details }}</p>
+          } @else {
+            <p class="details-text muted">No details available for this mission.</p>
+          }
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- More Info Links Section -->
+        <div class="section">
+          <h3 class="section-title"><mat-icon>link</mat-icon> More Info on Launch Details</h3>
+          <div class="links-row">
+            @if (mission()!.links?.article_link) {
+              <a [href]="mission()!.links.article_link" target="_blank"
+                 mat-icon-button matTooltip="Read Article" color="primary">
+                <mat-icon>article</mat-icon>
+              </a>
+            }
+            @if (mission()!.links?.wikipedia) {
+              <a [href]="mission()!.links.wikipedia" target="_blank"
+                 mat-icon-button matTooltip="Wikipedia" color="accent">
+                <mat-icon>language</mat-icon>
+              </a>
+            }
+            @if (mission()!.links?.video_link) {
+              <a [href]="mission()!.links.video_link" target="_blank"
+                 mat-icon-button matTooltip="Watch Video" color="warn">
+                <mat-icon>videocam</mat-icon>
+              </a>
+            }
+          </div>
+          @if (!mission()!.links?.article_link && !mission()!.links?.wikipedia && !mission()!.links?.video_link) {
+            <p class="no-links">No additional links available.</p>
+          }
+        </div>
+
+      </mat-card>
+    </div>
+  }
+</div>
